@@ -52,6 +52,44 @@ If I store my sqlite db in a folder called 'db' then I connect using the followi
 
 Yii now knows where the database is, so we need to add some tables and generate some code using Gii.
 
+##Step 3 : Add our Tables Using Migrations
+
+The tables could be added manually to the database without this step,but if you want to keep track of changes, or you work in a team, then migrations are the way forward.
+
+Review the docs regarding migrations here : [http://www.yiiframework.com/doc-2.0/guide-db-migrations.html](http://www.yiiframework.com/doc-2.0/guide-db-migrations.html)
+
+Create 2 tables, links and settings.
+
+Links has the fields:
+- id (int)
+- short_url (varchar(45))
+- full_url - (text)
+- status (boolean)
+- description (text)
+- published (dtaetime)
+
+Settings has the fields:
+- id (int)
+- setting_name (varchar(255))
+- setting_value (text)
+- setting_type (varchar(255))
+
+**Note:** To generate crud for a table using Gii, a table *needs* to have a primary key.
+
+If you get stuck, take a look at the commit for this part and check your migration against it.
+
+yii migrate/create create_links_table
+
+yii migrate/create create_settings_table
+
+Run the migrations to create the database tables with the command:
+
+`yii migrate up`
+
+Check your database, and you should now have the links and settings tables, plus the migrations table, that Yii uses to keep track of database updates.
+
+
+
 
 
 
