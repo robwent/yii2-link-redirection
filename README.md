@@ -23,6 +23,20 @@ The aims for this projects functionality are as follows:
 * We create a command line cron to periodically check all of the links to make sure none are broken.
 * If the cron detects a broken link, we use a mail template to email the admin and inform them that a link is broken, with an admin link to update the destination.
 
+##Step 1 : Installing the Basic App Skeleton
+
+Install the Yii2 basic app, via composer, to a web accessible directory by following the instructions on the Github page: [https://github.com/yiisoft/yii2-app-basic](https://github.com/yiisoft/yii2-app-basic)
+
+Make sure that you install the composer asset plugin globally or bower assets such as Bootstrap and jQuery won't get installed. The install would seem broken without it.
+
+In this repository, the application is in the linkapp folder.
+
+----------
+Once installed, browse to the web folder and you should see a basic app.
+![](images/fresh-install.PNG)
+
+Yii2 is installed.
+
 
 
 
