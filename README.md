@@ -122,6 +122,68 @@ In your config/web.php file, uncomment the urlManager section to enable nice url
 
 You should now be able to browse to the included pages using nice urls like /site/about
 
+##Step 5 : Generating Models and Crud
+
+We now have the tables we need, so we can start to generate the base code using the tool: Gii.
+
+As we have pretty urls enabled now, you should be able to browse to the url:
+
+`yourlocation/gii`
+
+This should be enabled by default if you are working on a localhost.
+
+If you are working on a live site then you will need to configure Gii to allow you access in your configuration file. Check the docs.
+
+We first need to generate a model to be able to create the crud that we need.
+
+Select the 'Model Generator'
+
+Generate models.
+
+First steps:
+
+Table Name: It should auto complete so select the table 'links'.
+
+The model class will be generated for you.
+
+Leave all as default, but select 'Generate activeQuery' as we will use that soon.
+
+Click preview and then generate.
+
+Generated files will now be in the models folder.
+
+----------
+
+Click on the Gii CRUD option in the left menu.
+
+For the model class field, it needs to be relative to our new Links class:
+
+app\models\Links
+
+Search class:
+
+app\models\LinksSearch
+
+Controller:
+
+app\controllers\LinksController
+
+View Path:
+
+@app/views/links
+
+Check pjax, just for fun.
+
+Check I18n if you want to translate the app into other languages.
+
+Click preview and generate.
+
+You should now be able to view the link admin at @webroot/links.
+
+You can now add, edit, update and delete new link records.
+
+Do the same for the 'settings table'.
+
 
 
 
