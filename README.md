@@ -82,11 +82,47 @@ yii migrate/create create_links_table
 
 yii migrate/create create_settings_table
 
-Run the migrations to create the database tables with the command:
+Run the migrations to create the database tables with the console command:
 
 `yii migrate up`
 
-Check your database, and you should now have the links and settings tables, plus the migrations table, that Yii uses to keep track of database updates.
+Check your database, and you should now have the links and settings tables, plus the migrations table that Yii uses to keep track of database updates.
+
+##Step 4 : Pretty URL's
+
+To use nice urls, we need to take 2 steps.
+
+- Create an .htaccess file.
+- Tell Yii to use nice urls.
+
+In the web root, create a .htaccess file and add the following:
+
+    Options +FollowSymLinks
+    IndexIgnore */*
+
+    RewriteEngine on
+
+    # if a directory or a file exists, use it directly
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # otherwise forward it to index.php
+    RewriteRule . index.php
+
+All requests that don't match an existing file will now be redirected to the index.php file for the application to deal with.
+
+In your config/web.php file, uncomment the urlManager section to enable nice urls.
+
+    'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
+
+You should now be able to browse to the included pages using nice urls like /site/about
+
+
 
 
 
