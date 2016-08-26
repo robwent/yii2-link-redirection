@@ -37,6 +37,21 @@ Once installed, browse to the web folder and you should see a basic app.
 
 Yii2 is installed.
 
+##Step 2 : Configure a database
+
+Create an mysql database and update the config file with the correct information.
+
+Follow the steps for the basic app to configure the database
+[https://github.com/yiisoft/yii2-app-basic#database](https://github.com/yiisoft/yii2-app-basic#database)
+
+If you want to use an sqlite database you can create one and configure the app to connect to that. There have been a few issues with people trying to connect so it is always best too use the app root alias to connect as it makes the app portable in the future without having to change the database connection information.
+
+If I store my sqlite db in a folder called 'db' then I connect using the following:
+
+`'dsn' => 'sqlite:@app/db/linkapp.db',`
+
+Yii now knows where the database is, so we need to add some tables and generate some code using Gii.
+
 
 
 
