@@ -435,5 +435,88 @@ Our settings are now available and can be accessed using:
 
 `Yii::$app->params['settings']['setting_name']`
 
+##Step 10 : Redirecting the Links
 
+We now have a working admin area where we can add our short urls, we have our routes set to redirect all urls that don't match our defined pages to send all other urls to our link controller and view action. We can now start checking the urls and redirect them.
 
+Make sure you have a few records added for testing later.
+
+###The controller
+
+Open up the links controller and check the view method. It should look like this:
+
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+Since we will not be checking for the id of a specific record and will be checking by the shor_url field, we can strip this back to remove all code
+
+    public function actionView()
+    {
+        
+    }
+
+Firstly, we want to get the url path, which our route defines as a get variable to pass to the controller (The brackets pass the url as a get parameter <short_url>).
+
+`$short_url = Yii::$app->request->get('short_url', false);`
+
+We then use activeRecord from the Links model to search for a record match.
+
+`$link = Links::findOne(['short_url' => $short_url]);`
+
+If no record exists $link will be false. We can use this to either direct the user to the view template, passing the record as an array to the view, or generate a 404 page. We will also check the record retrieved to make sure that status === 1 so we know the redirect is enabled.
+
+    public function actionView()
+    {
+        //Check the url as defined by our route
+        $short_url = Yii::$app->request->get('short_url', false);
+        //Check if we have a matching record
+        $link = Links::findOne(['short_url' => $short_url]);
+        //If we have a match, go to the view page, if not throw a 404 and pass the url as the message
+        if ($link && (int)$link->status === 1) {
+          return $this->render('view', [
+            'model' => $link,
+          ]);
+        } else {
+          throw new \yii\web\NotFoundHttpException($short_url);
+        }
+    }
+
+###The view
+
+Open up the views/links/view.php file and remove everything other than the `use yii\helpers\Html;` statement. We will only be redirecting the user here so no output is necessary.
+
+In our links controller, we just passed the first matching record to the view as 'model' so all fields from the record are available in the view through the $model variable.
+
+`$full_url = $model->full_url;`
+
+We also have our settings available, so we can now redirect the user to the full_url, adding a status code and robots header if the values are set.
+
+Check your code against the repository and then test the app.
+
+Go to appaddress/made_up_short_url and you should be shown a 404 message with the requested url passed into the error message.
+
+Then check the site for a valid short_url in your links table /appaddress/valid_short_url and you should be redirected to the full_url field for the same record.
+
+###Adding Google analytics
+
+To record the number of hits to each of our links, we can use Google analytics and events.
+
+Since the page will redirect without rendering any content, we will use the measurement protocol to send the information using curl
+
+[https://developers.google.com/analytics/devguides/collection/protocol/v1/reference](https://developers.google.com/analytics/devguides/collection/protocol/v1/reference)
+
+To record a hit as an analytics 'event' we need to specify the following variables:
+
+- User identifier (not personally identifiable such as an IP address)
+- The account id
+- The hit type (event)
+- The event category
+- The event action
+
+To create a unique id for each user, we can use php's crc32 function on the users ip address. The analytics id will be set in our settings page.
+
+Check the file in the repository for the full code.

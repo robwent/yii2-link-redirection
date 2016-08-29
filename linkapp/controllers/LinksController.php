@@ -64,11 +64,20 @@ class LinksController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView()
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        //Check the url as defined by our route
+        $short_url = Yii::$app->request->get('short_url', false);
+        //Check if we have a matching record
+        $link = Links::findOne(['short_url' => $short_url]);
+        //If we have a match, go to the view page, if not throw a 404 and pass the url as the message
+        if ($link && (int)$link->status === 1) {
+          return $this->render('view', [
+            'model' => $link,
+          ]);
+        } else {
+          throw new \yii\web\NotFoundHttpException($short_url);
+        }
     }
 
     /**
