@@ -252,6 +252,43 @@ Update views/site/login.php to remove the user details.
 
 Update models/User.php to update the admin user details and remove the demo user
 
+##Step 8 : Modifying Default Routes and Hiding the Navbar
+
+There won't be any need for guest users to see the admin bar, so we will change the layout to only show the navbar to authenticated users.
+
+Before we do that, we should change the the login url from /site/login to just /login so it's easier to remember.
+
+[http://www.yiiframework.com/doc-2.0/yii-web-urlmanager.html#$rules-detail](http://www.yiiframework.com/doc-2.0/yii-web-urlmanager.html#$rules-detail)
+
+Add the rule `'<alias:login|logout>' => 'site/<alias>',` to set login and logout as aliases of the real urls (Note: The login page will still be accessible by the original /site/login path and is purely for our convenience).
+
+Whilst we are in the urlManager configuration, add 3 more rules so the full block looks like this:
+
+    'rules' => [
+              'links' => 'links/index',
+              'settings' => 'settings/update',
+              '<alias:login|logout>' => 'site/<alias>',
+              '<short_url>' => 'links/view',
+            ],
+
+The settings page that we create in the next section will only have an update page, so we want the /settings url to automatically go to the update action we will specify in the controller.
+
+Yii tests the rules in order, so we want to check the pages we know exist first, and the last rule will be used to pass the url to our links controller, view action, which can then check to see if the short_url passed through the url matches any in our links database table.
+
+###Hiding the navbar
+
+The main navbar as added as a Yii widget in the main layout file at /views/layouts/main.php
+
+Modify the NavBar function settings to:
+
+- Change the brand label text to something more suitable.
+- Remove the 'home', 'about' and 'contact' links from the items array. Replace them with 'Links' and 'Settings' to the routes we juct created in the web config file. 
+- Copy the guest user check to wrap the whole navbar to only show it to logged in users.
+- Change the login/out logic to only include a logout option.
+
+You should now only see the navbar after navigation to /login and logging in to the application, and it should now include a link to the Links index page, and a link to the settings page (Which will currently go to a 404 error).
+
+
 
 
 
