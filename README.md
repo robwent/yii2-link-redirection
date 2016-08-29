@@ -182,7 +182,32 @@ You should now be able to view the link admin at @webroot/links.
 
 You can now add, edit, update and delete new link records.
 
-Do the same for the 'settings table'.
+
+##Step 6 : Modifying the Generated Code
+
+Open the _form.php partial in /views/links/ and change the 'status' and 'published' fields from a text input, to a checkbox. [http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail](http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail)
+
+Now, when you view the /links page, and click on the 'Create Links' button, you should see the form has a checkbox for these 2 fields, rather than the previous text fields.
+
+If you now create some links, you will see that after creating a link, you are redirected to a view of the record that we just created.
+This isn't that useful to us, as all the information we need to view is also shown in the grid overview.
+
+Open up controllers/LinksController.php and find the actionCreate method.
+
+In the if statement which checks to see if a new record was saved, change the line:
+
+`return $this->redirect(['view', 'id' => $model->id]);`
+
+to redirect back to the index page:
+
+`return $this->redirect(['index']);`
+
+Also change the redirect for the update action to do the same thing.
+
+
+
+
+
 
 
 
