@@ -8,6 +8,7 @@ use app\models\LinksSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * LinksController implements the CRUD actions for Links model.
@@ -20,6 +21,20 @@ class LinksController extends Controller
     public function behaviors()
     {
         return [
+          'access' => [
+            'class' => AccessControl::className(),
+            'rules' => [
+              [
+                'actions' => ['login', 'error', 'view'],
+                'allow' => true,
+              ],
+              [
+                'actions' => ['logout', 'index', 'create', 'update', 'linkDetail', 'delete'],
+                'allow' => true,
+                'roles' => ['@'],
+              ],
+            ],
+          ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

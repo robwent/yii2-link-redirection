@@ -126,6 +126,8 @@ You should now be able to browse to the included pages using nice urls like /sit
 
 We now have the tables we need, so we can start to generate the base code using the tool: Gii.
 
+Use the login link to log in to the app as the admin user with admin/admin. We will change these details later.
+
 As we have pretty urls enabled now, you should be able to browse to the url:
 
 `yourlocation/gii`
@@ -185,6 +187,8 @@ You can now add, edit, update and delete new link records.
 
 ##Step 6 : Modifying the Generated Code
 
+###Updating the form and redirect behaviour
+
 Open the _form.php partial in /views/links/ and change the 'status' and 'published' fields from a text input, to a checkbox. [http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail](http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail)
 
 Now, when you view the /links page, and click on the 'Create Links' button, you should see the form has a checkbox for these 2 fields, rather than the previous text fields.
@@ -204,6 +208,49 @@ to redirect back to the index page:
 
 Also change the redirect for the update action to do the same thing.
 
+Now try creating a new link and you should be redirected to the index page on save.
+
+###Updating the index list view
+
+In the listings view, we have no need in the id column or the view record icon link, so we should take those out.
+
+Open views/links/index.php and in the 'columns' array, remove id.
+
+To change the available icons, we need to add a template to the 'yii\grid\ActionColumn' class array.
+
+http://www.yiiframework.com/doc-2.0/yii-grid-actioncolumn.html#$template-detail
+
+Add a template to only include {update} {delete} actions.
+
+We now have a working administration area for our links. 
+
+##Step 7 : Making the Admin Area Only Accessible to Authenticated Users
+
+We can now manage our links, but if you log out of the application, you will see that you can still access the the link area and add/update and delete records.
+
+Update the LinksController 'behaviors' function to add access control rules.
+
+Start by adding a 'use' statement to the top of the file so Yii knows where to find the accessControl class
+
+`use yii\filters\AccessControl;`
+
+Allow guest users to perform 'login', 'error' and 'view' actions.
+
+Allow authenticated users to perform 'logout', 'index', 'create', 'update', 'linkDetail', 'delete' actions by specifying the roles with @ (Authenticated user).
+
+[http://www.yiiframework.com/doc-2.0/yii-filters-accesscontrol.html](http://www.yiiframework.com/doc-2.0/yii-filters-accesscontrol.html)
+
+If you now try going to the links listing page, you should now be redirected to the site login page.
+
+If you then login with the details admin/admin, you should be authenticated and then redirected to the page you were trying to access.
+
+###Changing the login details and login page
+
+As you probably noticed, the login details are shown underneath the form on the login page.
+
+Update views/site/login.php to remove the user details.
+
+Update models/User.php to update the admin user details and remove the demo user
 
 
 
