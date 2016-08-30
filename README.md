@@ -136,6 +136,8 @@ This should be enabled by default if you are working on a localhost.
 
 If you are working on a live site then you will need to configure Gii to allow you access in your configuration file. Check the docs.
 
+[http://www.yiiframework.com/doc-2.0/ext-gii-index.html](http://www.yiiframework.com/doc-2.0/ext-gii-index.html)
+
 We first need to generate a model to be able to create the crud that we need.
 
 Select the 'Model Generator'
@@ -520,3 +522,58 @@ To record a hit as an analytics 'event' we need to specify the following variabl
 To create a unique id for each user, we can use php's crc32 function on the users ip address. The analytics id will be set in our settings page.
 
 Check the file in the repository for the full code.
+
+##Step 11 : Checking all Links by CRON
+
+Now we have the link redirection working, we should check periodically to see if the links work, or if they need updating.
+
+The Yii2 basic skeleton app comes with a console application pre-configured which we can use via a cron job to check our links.
+
+The configuration file can be found at /config/console.php
+
+It specifies the controller namespace as app\commands, which corresponds to the commands folder which contains an example hello world controller, which you can test from the root of the site with the command:
+
+`yii hello/index`
+
+(you could also use `yii hello` here as index is the default action)
+
+We will be needing some of our settings from the database for the link checking, so add our settings class to the bootstrap area of the console configuration file, in the same way as we did for the web config.
+
+We will also need the same url routes to be able to create links for our emails, so also copy over the urlManager section. Add a new parameter to the urlManager for 'baseUrl' specifying the url of the site (We will use this to generate edit links to modify any records that contain broken links)
+
+###The controller
+
+Create the file LinkController.php in the commands folder by copying and modifying the HelloController. We will need the following use statements:
+
+    use Yii;
+    use app\models\Links;
+    use yii\console\Controller;
+    use yii\helpers\Html;
+    use yii\helpers\Url;
+
+Yii to get our settings, the links model to get all of our links from the database, the html helper to generate edit links, and url to create those links back to the application.
+
+Create a public function for actionChecklinks which we will later call using `yii link/checklinks`
+
+In this function you need to:
+
+- Get all link records where status is set to 1 using the links model class and activeRecord.
+- Initialise an array to hold any errors.
+- Loop through each record and use curl to check the response headers returned by the host server.
+- If the status code is not 200 (ok), create an edit link using Yii's helper classes and add an error message to the errors array containing the edit link. 
+
+[http://www.yiiframework.com/doc-2.0/yii-helpers-html.html](http://www.yiiframework.com/doc-2.0/yii-helpers-html.html)
+
+[http://www.yiiframework.com/doc-2.0/yii-helpers-url.html](http://www.yiiframework.com/doc-2.0/yii-helpers-url.html)
+
+After looping through the links, check the global settings to see if we have a value for 'mailto' (You will need to update the settings page to actually add this).
+
+If the errors array is not empty, and we have a mailto address, we can send an email to the user to notify them of the broken links using the built-in swiftmailer.
+
+[http://www.yiiframework.com/doc-2.0/ext-swiftmailer-index.html](http://www.yiiframework.com/doc-2.0/ext-swiftmailer-index.html)
+
+Make sure you have some full urls in the links table that don't work and then test the checks using the command `yii link/checklinks`.
+
+If you get a lot of warning messages, you can turn off debugging in the yii file in the root of the app by setting YII_DEBUG to false.
+
+By default, the output of the mailer will be saved to the folder 'mailoutput' in the root of the site. Use the link above to configure swiftmailer to send real mail.

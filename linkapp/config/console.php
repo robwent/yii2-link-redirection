@@ -6,7 +6,10 @@ $db = require(__DIR__ . '/db.php');
 $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+      'log',
+      'app\base\settings',
+    ],
     'controllerNamespace' => 'app\commands',
     'components' => [
         'cache' => [
@@ -21,7 +24,18 @@ $config = [
             ],
         ],
         'db' => $db,
-    ],
+        'urlManager' => [
+          'enablePrettyUrl' => true,
+          'showScriptName' => false,
+          'baseUrl' => 'http://thisdomain.com',
+          'rules' => [
+            'settings' => 'settings/update',
+            'links' => 'links/index',
+            '<alias:login|logout>' => 'site/<alias>',
+            '<short_url>' => 'links/view',
+          ],
+        ],
+      ],
     'params' => $params,
     /*
     'controllerMap' => [
@@ -32,12 +46,5 @@ $config = [
     */
 ];
 
-if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-    ];
-}
 
 return $config;
