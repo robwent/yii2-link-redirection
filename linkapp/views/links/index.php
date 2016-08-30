@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
+use kartik\editable\Editable;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\LinksSearch */
@@ -18,22 +19,59 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Links', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?php Pjax::begin(); ?>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'short_url:url',
-            'full_url:ntext',
-            'status',
-            'description:ntext',
-            // 'published',
-
-            ['class' => 'yii\grid\ActionColumn',
-             'template' => '{update} {delete}'],
-        ],
-    ]); ?>
+    <?php Pjax::begin(); 
+    $gridColumns = [
+    // the detail column configuration - expands the row
+    [
+      'class' => 'kartik\grid\ExpandRowColumn',
+      'value' => function ($model, $key, $index) {
+        return GridView::ROW_COLLAPSED;
+      },
+      'detail' => function ($model, $key, $index, $column) {
+        return Yii::$app->controller->renderPartial('_link-details', ['model'=>$model]);
+      },
+      'attribute' => ''
+    ],
+    // the short_url column configuration
+    [
+      'class' => 'kartik\grid\EditableColumn',
+      'attribute' => 'short_url',
+      'pageSummary' =>true,
+      'editableOptions'=> function ($model, $key, $index) {
+        return [
+          'header' => 'Name',
+          'size' => 'sm',
+        ];
+      }
+    ],
+    // the full_url column configuration
+    [
+      'class' => 'kartik\grid\EditableColumn',
+      'attribute' => 'full_url',
+      'editableOptions'=>[
+        'header' => 'Target URL',
+        'inputType'=> Editable::INPUT_TEXT,
+      ],
+      'pageSummary'=>true
+    ],
+    // the status toggle configuration
+    [
+      'class' => 'kartik\grid\BooleanColumn',
+      'attribute' => 'status',
+      'vAlign'=>'middle',
+    ],
+    [
+      'class' => 'kartik\grid\ActionColumn',
+      'template' => '{update} {delete}'
+    ]
+  ];
+  ?>
+  <?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+    'columns' => $gridColumns,
+    'export' => false,
+    'pjax' => true
+  ]); ?>
     <?php Pjax::end(); ?>
 </div>
