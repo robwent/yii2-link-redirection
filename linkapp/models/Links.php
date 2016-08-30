@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "links".
@@ -62,4 +63,18 @@ class Links extends \yii\db\ActiveRecord
     {
         return new LinksQuery(get_called_class());
     }
+
+    public function behaviors()
+    {
+      return [
+        'timestamp' => [
+          'class' => 'yii\behaviors\TimestampBehavior',
+          'attributes' => [
+            ActiveRecord::EVENT_BEFORE_INSERT => ['published'],
+          ],
+          'value' => function() { return date('Y-m-d H:i:s'); },
+        ],
+      ];
+    }
+
 }

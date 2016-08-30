@@ -191,11 +191,14 @@ You can now add, edit, update and delete new link records.
 
 ###Updating the form and redirect behaviour
 
-Open the _form.php partial in /views/links/ and change the 'status' and 'published' fields from a text input, to a checkbox. [http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail](http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail)
+Open the _form.php partial in /views/links/ and change the 'status' field from a text input, to a checkbox. [http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail](http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail)
 
-Now, when you view the /links page, and click on the 'Create Links' button, you should see the form has a checkbox for these 2 fields, rather than the previous text fields.
+Now, when you view the /links page, and click on the 'Create Links' button, you should see the status field uses a checkbox, rather than the previous text field.
+
+Remove the 'published' field as we will populate this automatically later.
 
 If you now create some links, you will see that after creating a link, you are redirected to a view of the record that we just created.
+
 This isn't that useful to us, as all the information we need to view is also shown in the grid overview.
 
 Open up controllers/LinksController.php and find the actionCreate method.
@@ -577,3 +580,35 @@ Make sure you have some full urls in the links table that don't work and then te
 If you get a lot of warning messages, you can turn off debugging in the yii file in the root of the app by setting YII_DEBUG to false.
 
 By default, the output of the mailer will be saved to the folder 'mailoutput' in the root of the site. Use the link above to configure swiftmailer to send real mail.
+
+##Step 12 : Enhancing Grid View with an Extension
+
+We now hav a functional app, but updating links is harder than it should be and our gridview shows 1 or 0 for the status column.
+
+We can replace the standard gridView widget with another that provides extra functionality such as inline editing. We will use the Kartik yii2-grid widget.
+
+[https://github.com/kartik-v/yii2-grid](https://github.com/kartik-v/yii2-grid)
+
+We will need to add 2 new entries to the composer.json files require section:
+
+    "kartik-v/yii2-grid": "@dev",
+    "kartik-v/yii2-editable": "@dev"
+
+Then run `composer update` from command line in the root of the app.
+
+You shoudl now have karti-v folder in the vendor folder.
+
+Follow the instructions to configure the extension in the Github repository by editing the congiguration file and add the use statements to the views/links/index.php file
+
+    use kartik\grid\GridView;
+    use kartik\editable\Editable;
+
+Note: if you are copying the code from this repository, you will need oto create the new partial file _link-details.php
+
+##Step 13 : Use Behaviours to Add a Timestamp to the Create Method
+
+We currently have a 'published' field of type datetime that is empty for all records in our links table. We can add a behaviour to our links model to automatically populate this field when a record is created.
+
+[http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html](http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html)
+
+Add a behaviour method to the links controller to populate the 'published' field with the class `TimestampBehavior` on the activeRecord event `EVENT_BEFORE_INSERT`. Use the php date function to format the current time to a valid datetime format for the database type.
