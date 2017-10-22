@@ -23,7 +23,7 @@ The aims for this projects functionality are as follows:
 * We create a command line cron to periodically check all of the links to make sure none are broken.
 * If the cron detects a broken link, we use a mail template to email the admin and inform them that a link is broken, with an admin link to update the destination.
 
-##Step 1 : Installing the Basic App Skeleton
+## Step 1 : Installing the Basic App Skeleton
 
 Install the Yii2 basic app, via composer, to a web accessible directory by following the instructions on the Github page: [https://github.com/yiisoft/yii2-app-basic](https://github.com/yiisoft/yii2-app-basic)
 
@@ -37,7 +37,7 @@ Once installed, browse to the web folder and you should see a basic app.
 
 Yii2 is installed.
 
-##Step 2 : Configure a database
+## Step 2 : Configure a database
 
 Create an mysql database and update the config file with the correct information.
 
@@ -52,7 +52,7 @@ If I store my sqlite db in a folder called 'db' then I connect using the followi
 
 Yii now knows where the database is, so we need to add some tables and generate some code using Gii.
 
-##Step 3 : Add our Tables Using Migrations
+## Step 3 : Add our Tables Using Migrations
 
 The tables could be added manually to the database without this step,but if you want to keep track of changes, or you work in a team, then migrations are the way forward.
 
@@ -88,7 +88,7 @@ Run the migrations to create the database tables with the console command:
 
 Check your database, and you should now have the links and settings tables, plus the migrations table that Yii uses to keep track of database updates.
 
-##Step 4 : Pretty URL's
+## Step 4 : Pretty URL's
 
 To use nice urls, we need to take 2 steps.
 
@@ -122,7 +122,7 @@ In your config/web.php file, uncomment the urlManager section to enable nice url
 
 You should now be able to browse to the included pages using nice urls like /site/about
 
-##Step 5 : Generating Models and Crud
+## Step 5 : Generating Models and Crud
 
 We now have the tables we need, so we can start to generate the base code using the tool: Gii.
 
@@ -187,9 +187,9 @@ You should now be able to view the link admin at @webroot/links.
 You can now add, edit, update and delete new link records.
 
 
-##Step 6 : Modifying the Generated Code
+## Step 6 : Modifying the Generated Code
 
-###Updating the form and redirect behaviour
+### Updating the form and redirect behaviour
 
 Open the _form.php partial in /views/links/ and change the 'status' field from a text input, to a checkbox. [http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail](http://www.yiiframework.com/doc-2.0/yii-widgets-activefield.html#checkbox()-detail)
 
@@ -215,7 +215,7 @@ Also change the redirect for the update action to do the same thing.
 
 Now try creating a new link and you should be redirected to the index page on save.
 
-###Updating the index list view
+### Updating the index list view
 
 In the listings view, we have no need in the id column or the view record icon link, so we should take those out.
 
@@ -229,7 +229,7 @@ Add a template to only include {update} {delete} actions.
 
 We now have a working administration area for our links. 
 
-##Step 7 : Making the Admin Area Only Accessible to Authenticated Users
+## Step 7 : Making the Admin Area Only Accessible to Authenticated Users
 
 We can now manage our links, but if you log out of the application, you will see that you can still access the the link area and add/update and delete records.
 
@@ -249,7 +249,7 @@ If you now try going to the links listing page, you should now be redirected to 
 
 If you then login with the details admin/admin, you should be authenticated and then redirected to the page you were trying to access.
 
-###Changing the login details and login page
+### Changing the login details and login page
 
 As you probably noticed, the login details are shown underneath the form on the login page.
 
@@ -257,7 +257,7 @@ Update views/site/login.php to remove the user details.
 
 Update models/User.php to update the admin user details and remove the demo user
 
-##Step 8 : Modifying Default Routes and Hiding the Navbar
+## Step 8 : Modifying Default Routes and Hiding the Navbar
 
 There won't be any need for guest users to see the admin bar, so we will change the layout to only show the navbar to authenticated users.
 
@@ -280,7 +280,7 @@ The settings page that we create in the next section will only have an update pa
 
 Yii tests the rules in order, so we want to check the pages we know exist first, and the last rule will be used to pass the url to our links controller, view action, which can then check to see if the short_url passed through the url matches any in our links database table.
 
-###Hiding the navbar
+### Hiding the navbar
 
 The main navbar as added as a Yii widget in the main layout file at /views/layouts/main.php
 
@@ -293,11 +293,11 @@ Modify the NavBar function settings to:
 
 You should now only see the navbar after navigation to /login and logging in to the application, and it should now include a link to the Links index page, and a link to the settings page (Which will currently go to a 404 error).
 
-##Step 9 : Creating the Settings Page
+## Step 9 : Creating the Settings Page
 
 The settings page will allow us to modify some global options. These could also be stored and read from a file, but we will use Gii to generate a model, controller and update view to modify the settings table we created earlier, and then we will create a settings class and bootstrap it so that our options are always available for us to use in the application.
 
-###Generating the controller and view
+### Generating the controller and view
 
 Make sure you are logged into the application and navigate back to /gii to the options page.
 
@@ -315,7 +315,7 @@ Preview and generate the controller and view.
 
 Now click on the application link in the top menu to get back to our application and then click on the settings link in the top menu. You should now see our newly created view file with some dummy text.
 
-###Adding some data to the settings table
+### Adding some data to the settings table
 
 Before we create the settings page, it's going to be helpful to have some data in the settings table to work with. We can do this by creating a new migration to seed the settings table.
 
@@ -364,7 +364,7 @@ Then apply the migration with the command `yii migrate`.
 
 If you now check the settings table in the database, it should contain our new settings data.
 
-###Adding the form to the settings update page
+### Adding the form to the settings update page
 
 There are many ways that the settings page could be displayed.
 
@@ -376,7 +376,7 @@ We use Yii's html helper to create the form button, and the activeForm widget to
 
 If you try and view the settings page now you will get an error. We first need to pass the settings to the view through our generated controller.
 
-###Passing the settings from the database to the update page
+### Passing the settings from the database to the update page
 
 Open up the generated settingsController.php file
 
@@ -421,7 +421,7 @@ We use Yii's model class to check if the form has been submitted, and validate m
 
 You should now be able to update the settings using the new form.
 
-###Making the settings available in the application
+### Making the settings available in the application
 
 Now we have the settings in the database, we need to make them available to the application at runtime.
 
@@ -440,13 +440,13 @@ Our settings are now available and can be accessed using:
 
 `Yii::$app->params['settings']['setting_name']`
 
-##Step 10 : Redirecting the Links
+## Step 10 : Redirecting the Links
 
 We now have a working admin area where we can add our short urls, we have our routes set to redirect all urls that don't match our defined pages to send all other urls to our link controller and view action. We can now start checking the urls and redirect them.
 
 Make sure you have a few records added for testing later.
 
-###The controller
+### The controller
 
 Open up the links controller and check the view method. It should look like this:
 
@@ -490,7 +490,7 @@ If no record exists $link will be false. We can use this to either direct the us
         }
     }
 
-###The view
+### The view
 
 Open up the views/links/view.php file and remove everything other than the `use yii\helpers\Html;` statement. We will only be redirecting the user here so no output is necessary.
 
@@ -506,7 +506,7 @@ Go to appaddress/made_up_short_url and you should be shown a 404 message with th
 
 Then check the site for a valid short_url in your links table /appaddress/valid_short_url and you should be redirected to the full_url field for the same record.
 
-###Adding Google analytics
+### Adding Google analytics
 
 To record the number of hits to each of our links, we can use Google analytics and events.
 
@@ -526,7 +526,7 @@ To create a unique id for each user, we can use php's crc32 function on the user
 
 Check the file in the repository for the full code.
 
-##Step 11 : Checking all Links by CRON
+## Step 11 : Checking all Links by CRON
 
 Now we have the link redirection working, we should check periodically to see if the links work, or if they need updating.
 
@@ -544,7 +544,7 @@ We will be needing some of our settings from the database for the link checking,
 
 We will also need the same url routes to be able to create links for our emails, so also copy over the urlManager section. Add a new parameter to the urlManager for 'baseUrl' specifying the url of the site (We will use this to generate edit links to modify any records that contain broken links)
 
-###The controller
+### The controller
 
 Create the file LinkController.php in the commands folder by copying and modifying the HelloController. We will need the following use statements:
 
@@ -581,7 +581,7 @@ If you get a lot of warning messages, you can turn off debugging in the yii file
 
 By default, the output of the mailer will be saved to the folder 'mailoutput' in the root of the site. Use the link above to configure swiftmailer to send real mail.
 
-##Step 12 : Enhancing Grid View with an Extension
+## Step 12 : Enhancing Grid View with an Extension
 
 We now hav a functional app, but updating links is harder than it should be and our gridview shows 1 or 0 for the status column.
 
@@ -605,7 +605,7 @@ Follow the instructions to configure the extension in the Github repository by e
 
 Note: if you are copying the code from this repository, you will need oto create the new partial file _link-details.php
 
-##Step 13 : Use Behaviours to Add a Timestamp to the Create Method
+## Step 13 : Use Behaviours to Add a Timestamp to the Create Method
 
 We currently have a 'published' field of type datetime that is empty for all records in our links table. We can add a behaviour to our links model to automatically populate this field when a record is created.
 
