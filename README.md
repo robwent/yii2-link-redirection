@@ -8,7 +8,7 @@ It is not a walk through project. You should take a look at each step and try to
 
 Feel free to improve upon it.
 
-##The Plan
+## The Plan
 
 We all link to websites for further information, but websites change and links get broken.
 
